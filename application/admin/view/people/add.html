@@ -1,0 +1,78 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-name" class="form-control" name="row[name]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sex')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-sex" class="form-control selectpicker" name="row[sex]">
+                    <option value="">请选择</option>
+                {foreach name="sexList" item="vo"}
+                    <option value="{$key}">{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Age')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-age" class="form-control selectpicker" name="row[age]">
+                {foreach name="ageList" item="vo"}
+                    <option value="{$vo}">{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Height')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <select id="c-height" class="form-control selectpicker" name="row[height]">
+                
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Weight1')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <select id="c-weight1" class="form-control selectpicker" name="row[weight1]">
+                
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Shape')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <select id="c-shape" class="form-control selectpicker" name="row[shape]">
+                
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-file" class="control-label col-xs-12 col-sm-2">导入文件:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-file" class="form-control" size="35" name="row[file]" type="text" value="">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-file" class="btn btn-danger plupload" data-input-id="c-file" data-mimetype="csv,xls,xlsx" data-multiple="false" data-preview-id="p-file"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                </div>
+                <span class="msg-box n-right"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-file"></ul>
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
