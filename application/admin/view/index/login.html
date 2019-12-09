@@ -19,7 +19,7 @@
                 /* max-width:400px; */
                 width: 600px;
                 padding:0;
-                margin: 34px auto 0 auto;
+                margin: 60px auto 0 auto;
 
             }
             .login-screen .well {
@@ -27,7 +27,7 @@
                 -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                 background: rgba(255,255,255, 0.2);
-                padding: 10px 34px;
+                padding: 20px 34px;
                 width: 600px;
             }
             .login-screen .copyright {
@@ -79,17 +79,17 @@
                                 {:token()}
                                 <div class="input-group">
                                     <div class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></div>
-                                    <input type="text" class="form-control" id="pd-form-username" placeholder="{:__('Username')}" name="username" autocomplete="off" value="" data-rule="{:__('Username')}:required;username" />
+                                    <input type="text" style="padding: 22px 10px;" class="form-control" id="pd-form-username" placeholder="{:__('Username')}" name="username" autocomplete="off" value="" data-rule="{:__('Username')}:required;username" />
                                 </div>
 
                                 <div class="input-group">
                                     <div class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div>
-                                    <input type="password" class="form-control" id="pd-form-password" placeholder="{:__('Password')}" name="password" autocomplete="off" value="" data-rule="{:__('Password')}:required;password" />
+                                    <input type="password" style="padding: 22px 10px;" class="form-control" id="pd-form-password" placeholder="{:__('Password')}" name="password" autocomplete="off" value="" data-rule="{:__('Password')}:required;password" />
                                 </div>
                                 {if $config.fastadmin.login_captcha}
                                 <div class="input-group">
                                     <div class="input-group-addon"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></div>
-                                    <input type="text" name="captcha" class="form-control" placeholder="{:__('Captcha')}" data-rule="{:__('Captcha')}:required;length(4)" />
+                                    <input type="text" name="captcha" style="padding: 22px 10px;" class="form-control" placeholder="{:__('Captcha')}" data-rule="{:__('Captcha')}:required;length(4)" />
                                     <span class="input-group-addon" style="padding:0;border:none;cursor:pointer;">
                                         <img src="{:rtrim('__PUBLIC__', '/')}/index.php?s=/captcha" width="100" height="30" onclick="this.src = '{:rtrim('__PUBLIC__', '/')}/index.php?s=/captcha&r=' + Math.random();"/>
                                     </span>
@@ -102,7 +102,7 @@
                                     </label>
                                 </div> -->
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-success btn-lg btn-block" style="background: #255e9d">{:__('Sign in')}</button>
+                                    <button type="submit" class="btn btn-success btn-lg btn-block" style="background: #255e9d; padding: 16px;">{:__('Sign in')}</button>
                                 </div>
                             </form>
                         </div>
@@ -110,7 +110,7 @@
                    
                 </div>
 
-                <div style="text-align: center;padding-top: 50px;color: #dfdfdf;">
+                <div style="text-align: center;padding-top: 100px;color: #dfdfdf;font-size: 20px;">
                     <p style="letter-spacing: 9px;">中汽研（天津）汽车工程研究院有限公司</p>
                     <p>CATARC(TIANJIN)Automative Engineering Research Institute Co,.Lta</p>
                 </div>
