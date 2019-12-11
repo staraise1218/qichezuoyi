@@ -47,6 +47,9 @@
                 .login-screen {
                     padding:0 20px;
                 }
+                ._logo {
+                    display: none;
+                }
             }
             .profile-img-card {
                 width: 260px;
@@ -72,12 +75,12 @@
     </head>
     <body>
         <div class="container">
-            <div style="padding-top: 50px;padding-left: 60px; box-sizing: border-box;">
+            <div class="_logo" style="padding-top: 50px;padding-left: 60px; box-sizing: border-box;">
                 <img src="/assets/img/logo_01.png" alt="" style="margin-right: 30px; width: 100px;">
                 <img src="/assets/img/logo_02.png" alt="" style="width: 100px">
             </div>
             <div class="login-wrapper">
-                <h1 style="letter-spacing: 5px;text-align: center;color: #FFF;font-weight: bold;margin-top: 100px;font-size: 46px;">汽车座椅舒适性乘员感知评价系统</h1>
+                <h1 style="letter-spacing: 5px;text-align: center;color: #FFF;font-weight: bold;margin-top: 40px;font-size: 46px;">汽车座椅舒适性乘员感知评价系统</h1>
                 <div class="login-screen">
                     <div class="well">
                         <div class="login-form">
@@ -88,13 +91,11 @@
                                 <div id="errtips" class="hide"></div>
                                 {:token()}
                                 <div class="input-group">
-                                    <!-- style="padding: 22px 10px;" -->
                                     <div class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></div>
                                     <input type="text"  class="form-control" id="pd-form-username" placeholder="{:__('Username')}" name="username" autocomplete="off" value="" data-rule="{:__('Username')}:required;username" />
                                 </div>
 
                                 <div class="input-group">
-                                        <!-- style="padding: 22px 10px;"  -->
                                     <div class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div>
                                     <input type="password" class="form-control" id="pd-form-password" placeholder="{:__('Password')}" name="password" autocomplete="off" value="" data-rule="{:__('Password')}:required;password" />
                                 </div>
@@ -108,14 +109,7 @@
                                     </span>
                                 </div>
                                 {/if}
-                                <!-- <div class="form-group">
-                                    <label class="inline" for="keeplogin">
-                                        <input type="checkbox" name="keeplogin" id="keeplogin" value="1" />
-                                        {:__('Keep login')}
-                                    </label>
-                                </div> -->
                                 <div class="form-group">
-                                        <!-- padding: 16px; -->
                                     <button type="submit" class="btn btn-success btn-lg btn-block" style="background: #255e9d; ">{:__('Sign in')}</button>
                                 </div>
                             </form>
