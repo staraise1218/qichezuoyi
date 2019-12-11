@@ -43,6 +43,17 @@
             .login-screen .copyright {
                 text-align: center;
             }
+            ._logo img {
+                width: 100px;
+            }
+            #_title {
+                letter-spacing: 5px;
+                text-align: center;
+                color: #FFF;
+                font-weight: bold;
+                margin-top: 40px;
+                font-size: 46px;
+            }
             @media(max-width:767px) {
                 .login-screen {
                     padding:0 20px;
@@ -80,15 +91,14 @@
     <body>
         <div class="container">
             <div class="_logo" style="padding-top: 50px;padding-left: 60px; box-sizing: border-box;">
-                <img src="/assets/img/logo_01.png" alt="" style="margin-right: 30px; width: 100px;">
-                <img src="/assets/img/logo_02.png" alt="" style="width: 100px">
+                <img src="/assets/img/logo_01.png" alt="" style="margin-right: 30px; ">
+                <img src="/assets/img/logo_02.png" alt="">
             </div>
             <div class="login-wrapper">
-                <h1 id="_title" style="letter-spacing: 5px;text-align: center;color: #FFF;font-weight: bold;margin-top: 40px;font-size: 46px;">汽车座椅舒适性乘员感知评价系统</h1>
+                <h1 id="_title" style="">汽车座椅舒适性乘员感知评价系统</h1>
                 <div class="login-screen">
                     <div class="well">
                         <div class="login-form">
-                            <!-- <img id="profile-img" class="profile-img-card" src="__CDN__/assets/img/logo_new.png" /> -->
                             <p id="profile-name" class="profile-name-card"></p>
 
                             <form action="" method="post" id="login-form">
@@ -105,7 +115,6 @@
                                 </div>
                                 {if $config.fastadmin.login_captcha}
                                 <div class="input-group">
-                                    <!-- style="padding: 22px 10px;" -->
                                     <div class="input-group-addon"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></div>
                                     <input type="text" name="captcha"  class="form-control" placeholder="{:__('Captcha')}" data-rule="{:__('Captcha')}:required;length(4)" />
                                     <span class="input-group-addon" style="padding:0;border:none;cursor:pointer;">
