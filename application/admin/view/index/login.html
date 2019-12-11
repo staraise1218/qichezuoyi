@@ -44,21 +44,40 @@
                 color: #FFF;
                 font-weight: bold;
             }
+            ._footer {
+                padding-top: 30px;
+                color: #dfdfdf;
+                font-size: 18px;
+            }
 
             @media screen and (min-width:480px){
                 #_title {
                     display: none;
+                }
+                ._logo img {
+                    width: 50px;
+                }
+                ._footer {
+                    padding-top: 10px;
+                    font-size: 13px;
                 }
             }
 
             @media screen and (min-width:768px) {
                 #_title {
                     display: block;
-                    font-size: 16px;
+                    font-size: 32px;
                     margin-top: 20px;
                 }
                 ._logo img {
                     width: 50px;
+                }
+                .login-screen {
+                    margin: 20px auto 0 auto;
+                }
+                ._footer {
+                    padding-top: 10px;
+                    font-size: 14px;
                 }
                 /* .login-screen {
                     padding:0 20px;
@@ -151,7 +170,7 @@
                    
                 </div>
 
-                <div style="text-align: center;padding-top: 30px;color: #dfdfdf;font-size: 18px;">
+                <div class="_footer" style="text-align: center;">
                     <p style="letter-spacing: 9px;">中汽研（天津）汽车工程研究院有限公司</p>
                     <p>CATARC(TIANJIN)Automative Engineering Research Institute Co,.Lta</p>
                 </div>
