@@ -4,7 +4,7 @@ namespace app\api\controller;
 
 use app\common\controller\Api;
 use app\common\library\Ems;
-use app\common\library\Sms;
+use app\api\library\Sms;
 use fast\Random;
 use think\Validate;
 
@@ -13,7 +13,7 @@ use think\Validate;
  */
 class User extends Api
 {
-    protected $noNeedLogin = ['login', 'mobilelogin', 'register', 'resetpwd', 'changeemail', 'changemobile', 'third'];
+    protected $noNeedLogin = ['login', 'mobilelogin', 'register', 'resetpwd', 'changeemail', 'changemobile', 'third', 'sendMobileCode'];
     protected $noNeedRight = '*';
 
     public function _initialize()
@@ -100,17 +100,16 @@ class User extends Api
      */
     public function register()
     {
-        $username = $this->request->request('username');
-        $password = $this->request->request('password');
-        $email = $this->request->request('email');
-        $mobile = $this->request->request('mobile');
-        $code = $this->request->request('code');
-        if (!$username || !$password) {
-            $this->error(__('Invalid parameters'));
+
+        $company_name  = input('post.company_name');
+        $mobile = input('post.mobile');
+        $password = input('post.password');
+        $code = input('post.code');
+
+        if (!$company_name  || !$password || !$mobile || !$code) {
+            $this->error('参数不完整');
         }
-        if ($email && !Validate::is($email, "email")) {
-            $this->error(__('Email is incorrect'));
-        }
+
         if ($mobile && !Validate::regex($mobile, "^1\d{10}$")) {
             $this->error(__('Mobile is incorrect'));
         }
@@ -124,6 +123,26 @@ class User extends Api
             $this->success(__('Sign up successful'), $data);
         } else {
             $this->error($this->auth->getError());
+        }
+    }
+
+
+    /**
+     * [sendMobileCode 发送手机验证码]
+     * @param [scene register 注册 2 找回密码 3 支付密码验证手机号]
+     * @return [type] [description]
+     */
+    public function sendMobileCode(){
+        $mobile = input('post.mobile');
+        $scene = input('post.scene', 'register');
+
+        $Sms = new Sms();
+        $code = $Sms->send($mobile, $scene, $error);
+
+        if($code != false){
+            $this->success('发送成功', array('code'=>$code));
+        } else {
+            $this->error($error);
         }
     }
 

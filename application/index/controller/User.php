@@ -188,6 +188,10 @@ class User extends Frontend
             && !preg_match("/(user\/login|user\/register|user\/logout)/i", $referer)) {
             $url = $referer;
         }
+
+        $background = Config::get('fastadmin.login_background');
+        $background = stripos($background, 'http') === 0 ? $background : config('site.cdnurl') . $background;
+        $this->view->assign('background', $background);
         $this->view->assign('url', $url);
         $this->view->assign('title', __('Login'));
         return $this->view->fetch();

@@ -209,7 +209,7 @@ class Api
         $result = [
             'code' => $code,
             'msg'  => $msg,
-            'time' => Request::instance()->server('REQUEST_TIME'),
+            // 'time' => Request::instance()->server('REQUEST_TIME'),
             'data' => $data,
         ];
         // 如果未设置类型则自动判断

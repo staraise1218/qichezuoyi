@@ -258,7 +258,7 @@ return [
     //FastAdmin配置
     'fastadmin'              => [
         //是否开启前台会员中心
-        'usercenter'          => false,
+        'usercenter'          => true,
         //登录验证码
         'login_captcha'       => true,
         //登录失败超过10次则1天后重试
@@ -276,6 +276,6 @@ return [
         //版本号
         'version'             => '1.0.0.20191101_beta',
         //API接口地址
-        // 'api_url'             => 'https://api.fastadmin.net',
+        'api_url'             => 'https://api.fastadmin.net',
     ],
 ];
