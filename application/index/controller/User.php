@@ -15,7 +15,7 @@ use think\Validate;
  */
 class User extends Frontend
 {
-    protected $layout = 'default';
+    protected $layout = '';
     protected $noNeedLogin = ['login', 'register', 'third'];
     protected $noNeedRight = ['*'];
 
@@ -149,34 +149,39 @@ class User extends Frontend
             $this->success(__('You\'ve logged in, do not login again'), $url ? $url : url('user/index'));
         }
         if ($this->request->isPost()) {
-            $account = $this->request->post('account');
+            $mobile = $this->request->post('mobile');
             $password = $this->request->post('password');
-            $keeplogin = (int)$this->request->post('keeplogin');
             $token = $this->request->post('__token__');
             $rule = [
-                'account'   => 'require|length:3,50',
+                'mobile'   => 'require|regex:/^[1][3,4,5,7,8][0-9]{9}$/',
                 'password'  => 'require|length:6,30',
                 '__token__' => 'require|token',
             ];
 
             $msg = [
-                'account.require'  => 'Account can not be empty',
-                'account.length'   => 'Account must be 3 to 50 characters',
+                'mobile.require'  => '手机号不能为空',
+                'mobile.regex'   => '手机号格式不正确',
                 'password.require' => 'Password can not be empty',
                 'password.length'  => 'Password must be 6 to 30 characters',
             ];
             $data = [
-                'account'   => $account,
+                'mobile'   => $mobile,
                 'password'  => $password,
                 '__token__' => $token,
             ];
+            if (Config::get('fastadmin.login_captcha')) {
+                $rule['captcha'] = 'require|captcha';
+                $msg['captcha.require'] = '验证码不能为空';
+                $msg['captcha.captcha'] = '验证码不正确';
+                $data['captcha'] = $this->request->post('captcha');
+            }
             $validate = new Validate($rule, $msg);
             $result = $validate->check($data);
             if (!$result) {
                 $this->error(__($validate->getError()), null, ['token' => $this->request->token()]);
                 return false;
             }
-            if ($this->auth->login($account, $password)) {
+            if ($this->auth->login($mobile, $password)) {
                 $this->success(__('Logged in successful'), $url ? $url : url('user/index'));
             } else {
                 $this->error($this->auth->getError(), null, ['token' => $this->request->token()]);
