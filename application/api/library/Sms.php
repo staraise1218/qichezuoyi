@@ -131,7 +131,7 @@ class Sms {
      */
     public function checkCode($mobile, $code, $scene, &$error){
         $smsLog = Db::name('SmsLog')
-            ->where("mobile=$mobile and scene=$scene")
+            ->where("mobile=$mobile and scene='$scene'")
             ->order('id desc')
             ->find();
 
