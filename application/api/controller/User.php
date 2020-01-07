@@ -114,7 +114,7 @@ class User extends Api
             $this->error(__('Mobile is incorrect'));
         }
         $Sms = new Sms();
-        $ret = $Sms->checkCode($mobile, $code, 1, $error);
+        $ret = $Sms->checkCode($mobile, $code, 'register', $error);
         if (!$ret) {
             $this->error($error);
         }
