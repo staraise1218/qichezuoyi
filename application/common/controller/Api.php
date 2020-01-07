@@ -70,7 +70,6 @@ class Api
      */
     public function __construct(Request $request = null)
     {
-        header('Access-Control-Allow-Origin:*');
         $this->request = is_null($request) ? Request::instance() : $request;
 
         // 控制器初始化

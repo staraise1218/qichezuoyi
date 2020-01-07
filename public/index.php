@@ -11,6 +11,8 @@
 // +----------------------------------------------------------------------
 // [ 应用入口文件 ]
 // 定义应用目录
+header('Access-Control-Allow-Origin:*');
+        // header('Access-Control-Allow-Credentials: true'); 
 define('APP_PATH', __DIR__ . '/../application/');
 
 // 判断是否安装FastAdmin
