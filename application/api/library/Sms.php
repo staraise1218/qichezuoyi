@@ -70,7 +70,7 @@ class Sms {
      * @return stdClass
      */
     public static function sendSms($mobile, $code, $scene) {
-        // return (object)array('Code'=>'OK');
+        return (object)array('Code'=>'OK');
         
         // 初始化SendSmsRequest实例用于设置发送短信的参数
         $request = new SendSmsRequest();
