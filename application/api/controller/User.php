@@ -118,7 +118,7 @@ class User extends Api
         if (!$ret) {
             $this->error($error);
         }
-        $ret = $this->auth->register($mobile, $password, $email, $mobile, ['company_name'=>$company_name]);
+        $ret = $this->auth->register($mobile, $password, '', $mobile, ['company_name'=>$company_name]);
         if ($ret) {
             $data = ['userinfo' => $this->auth->getUserinfo()];
             $this->success(__('Sign up successful'), $data);
