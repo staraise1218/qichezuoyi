@@ -48,7 +48,7 @@ class Form extends Api
             ->cache()->select();
 
         // 坐垫尺寸
-        $backrestSize = db('chair_backrest')
+        $cushionSize = db('chair_cushion')
             ->field('title, field, explain, image')
             ->order('weigh desc')
             ->cache()->select();
