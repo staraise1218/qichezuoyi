@@ -41,11 +41,34 @@ class Form extends Api
         // 座椅材质
         $chairMaterial = db('chair_material')->cache()->select();
 
+        // 靠背尺寸
+        $backrestSize = db('chair_backrest')
+            ->field('title, field, explain, image')
+            ->order('weigh desc')
+            ->cache()->select();
+
+        // 坐垫尺寸
+        $backrestSize = db('chair_backrest')
+            ->field('title, field, explain, image')
+            ->order('weigh desc')
+            ->cache()->select();
+
+        // 硬度数据
+        $hardnessSize = db('chair_hardness')
+            ->field('title, field, explain, image')
+            ->order('weigh desc')
+            ->cache()->select();
+
         $data['carBrandList'] = $carBrandList;
         $data['carLevel'] = $carLevel;
         $data['carPrice'] = $carPrice;
         $data['chairColor'] = $chairColor;
         $data['chairMaterial'] = $chairMaterial;
+        $data['backrestSize'] = $backrestSize;
+        $data['cushionSize'] = $cushionSize;
+        $data['hardnessSize'] = $hardnessSize;
+
+
         $this->success('请求成功', $data);
     }
 
