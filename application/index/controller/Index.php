@@ -13,8 +13,12 @@ class Index extends Frontend
 
     public function index()
     {
-    	die('开发中');
-        $this->redirect(url('user/login'));
+    	if(ismobile()){
+    		$this->redirect('http://qichezuoyi.staraise.com.cn/m');
+    	} else {
+
+    	}
+        $this->redirect(url('http://qichezuoyi.staraise.com.cn/pc'));
     }
 
 }
