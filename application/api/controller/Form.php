@@ -55,9 +55,21 @@ class Form extends Api
 
         // 硬度数据
         $hardnessSize = db('chair_hardness')
-            ->field('title, field, explain, image')
+            ->field('title, field, explain, image, type')
             ->order('weigh desc')
             ->cache()->select();
+
+        $hardnessSize_backrest = [];
+        $hardnessSize_cushion = [];
+        if(!empty($hardnessSize)){
+            foreach ($hardnessSize as $item) {
+                if($item['type'] == 1) {
+                    array_push($hardnessSize_backrest, $item);
+                } else {
+                    array_push($hardnessSize_cushion, $item);
+                }
+            }
+        }
 
         $data['carBrandList'] = $carBrandList;
         $data['carLevel'] = $carLevel;
@@ -66,7 +78,8 @@ class Form extends Api
         $data['chairMaterial'] = $chairMaterial;
         $data['backrestSize'] = $backrestSize;
         $data['cushionSize'] = $cushionSize;
-        $data['hardnessSize'] = $hardnessSize;
+        $data['hardnessSize_backrest'] = $hardnessSize_backrest;
+        $data['hardnessSize_cushion'] = $hardnessSize_cushion;
 
 
         $this->success('请求成功', $data);

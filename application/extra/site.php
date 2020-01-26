@@ -15,10 +15,7 @@ return array (
   'fixedpage' => 'people',
   'categorytype' => 
   array (
-    'default' => 'Default',
-    'page' => 'Page',
-    'article' => 'Article',
-    'test' => 'Test',
+    'hardness' => '硬度分类',
   ),
   'configgroup' => 
   array (

@@ -25,7 +25,7 @@ class Hardness extends Model
 
     // 追加属性
     protected $append = [
-
+        'type_text'
     ];
     
 
@@ -38,9 +38,18 @@ class Hardness extends Model
     }
 
     
+    public function getTypeList()
+    {
+        return ['1' => __('Type 1'), '2' => __('Type 2')];
+    }
 
 
-
+    public function getTypeTextAttr($value, $data)
+    {
+        $value = $value ? $value : (isset($data['type']) ? $data['type'] : '');
+        $list = $this->getTypeList();
+        return isset($list[$value]) ? $list[$value] : '';
+    }
 
 
 

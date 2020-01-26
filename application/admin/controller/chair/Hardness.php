@@ -22,7 +22,7 @@ class Hardness extends Backend
     {
         parent::_initialize();
         $this->model = new \app\admin\model\chair\Hardness;
-
+        $this->view->assign("typeList", $this->model->getTypeList());
     }
     
     /**
