@@ -1,0 +1,138 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-name" class="form-control" name="row[name]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Age')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-age" class="form-control" name="row[age]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sex')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-sex" class="form-control selectpicker" name="row[sex]">
+                {foreach name="sexList" item="vo"}
+                    <option value="{$key}" {in name="key" value=""}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Height')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-height" class="form-control" name="row[height]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Weight')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-weight" class="form-control" name="row[weight]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Shape')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-shape" class="form-control" name="row[shape]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Car_brand_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-car_brand_id" data-rule="required" data-source="car/brand/index" class="form-control selectpage" name="row[car_brand_id]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Car_system_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-car_system_id" data-rule="required" data-source="car/system/index" class="form-control selectpage" name="row[car_system_id]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Car_type_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-car_type_id" data-rule="required" data-source="car/type/index" class="form-control selectpage" name="row[car_type_id]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Car_level_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-car_level_id" data-rule="required" data-source="car/level/index" class="form-control selectpage" name="row[car_level_id]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Chair_price')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-chair_price" class="form-control" step="0.01" name="row[chair_price]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Chair_color_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-chair_color_id" data-rule="required" data-source="chair/color/index" class="form-control selectpage" name="row[chair_color_id]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Chair_material_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-chair_material_id" data-rule="required" data-source="chair/material/index" class="form-control selectpage" name="row[chair_material_id]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Chair_backrest_size')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-chair_backrest_size" class="form-control" name="row[chair_backrest_size]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Chair_cushion_size')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-chair_cushion_size" class="form-control" name="row[chair_cushion_size]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Chair_hardness_backrest')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-chair_hardness_backrest" class="form-control" name="row[chair_hardness_backrest]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Chair_hardness_cushion')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-chair_hardness_cushion" class="form-control" name="row[chair_hardness_cushion]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('User_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-user_id" data-rule="required" data-source="user/user/index" data-field="nickname" class="form-control selectpage" name="row[user_id]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('File')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-file" class="form-control" size="50" name="row[file]" type="text">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="plupload-file" class="btn btn-danger plupload" data-input-id="c-file" data-multiple="false" data-preview-id="p-file"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    <span><button type="button" id="fachoose-file" class="btn btn-primary fachoose" data-input-id="c-file" data-multiple="false"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-file"></span>
+            </div>
+            <ul class="row list-inline plupload-preview" id="p-file"></ul>
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
