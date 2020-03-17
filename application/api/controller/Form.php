@@ -127,6 +127,13 @@ class Form extends Api
 
 
         $filepath = '.'.$formData['file'];
+        if(cache(md5($filepath))) {
+            $result['formData'] = $formData;
+
+            $cacheData = cache(md5($filepath));
+            $result['result'] = unserialize($cacheData);
+            $this->success('', $result);
+        }
 
         $ext = pathinfo($filepath, PATHINFO_EXTENSION);
         if (!in_array($ext, ['csv', 'xls', 'xlsx'])) {
@@ -146,57 +153,72 @@ class Form extends Api
         }
 
         $currentSheet = $PHPExcel->getSheet(0);  //读取文件中的第一个工作表
-        $columns = $currentSheet->getCell('B11')->getValue(); // B11 列
+        $topColumns = $currentSheet->getCell('B11')->getValue(); // B11 列
 
-        // $columns == 64 说明文件里上部分是 靠背数据 ，下部分是坐垫数据
-
-        // 靠背值
-        $backrestData = array(
-            'peak_pressure' => $currentSheet->getCell('B17')->getValue(), // 最大压力
-            'average_pressure' => $currentSheet->getCell('B16')->getValue(), // 平均压力
-            'contact_area' => $currentSheet->getCell('B19')->getValue(), // 接触面积
-        );
-        // 坐垫值
-        $cushionData = array(
-            'peak_pressure' => $currentSheet->getCell('B70')->getValue(), // 最大压力
-            'average_pressure' => $currentSheet->getCell('B69')->getValue(), // 平均压力
-            'contact_area' => $currentSheet->getCell('B72')->getValue(), // 接触面积
-        );
-
+        // $topColumns == 64 说明文件里上部分是 靠背数据 ，下部分是坐垫数据
+         // 靠背硬度值数组
         $backrestArr = $cushiontArr = [];
-        // 靠背硬度值数组
-        for ($currentRow = 21; $currentRow <= 60; $currentRow++) {
-            for ($currentColumn = 1; $currentColumn <= 64; $currentColumn++) {
-                $val = $currentSheet->getCellByColumnAndRow($currentColumn, $currentRow)->getValue();
-                if($val != 0) $backrestArr[] = $val;
-            }
-        }
-        // 靠背加载力 加载力：非零值的总和*非零值个数*1.27*1.27
-        $backrest_jiazaili = round(array_sum($backrestArr)*count($backrestArr)*1.27*1.27, 2);
+        $backrestRowArr = $cushiontRowArr = []; // 所有数据 按行二维数组
+        if($topColumns == 64) {
+            // 靠背信息
+            $backrestInfo = $this->getRowData($currentSheet, 60, 21, 1, 64);
+            // 靠背值
+            $backrestData = $this->getCellValue($currentSheet, 'B17', 'B16', 'B19');
+        
+            // 坐垫信息
+            $cushiontInfo = $this->getRowData($currentSheet, 113, 74, 1, 40);
+            // 坐垫值
+            $cushionData = $this->getCellValue($currentSheet, 'B70', 'B69', 'B72');
+            
+           
+        } else {
+            // 坐垫信息
+            $cushiontInfo = $this->getRowData($currentSheet, 60, 21, 1, 40);
+            // 坐垫值
+            $cushionData = $this->getCellValue($currentSheet, 'B17', 'B16', 'B19');
 
-        // 坐垫硬度值数组
-        for ($currentRow = 74; $currentRow <= 113; $currentRow++) {
-            for ($currentColumn = 1; $currentColumn <= 40; $currentColumn++) {
-                $val = $currentSheet->getCellByColumnAndRow($currentColumn, $currentRow)->getValue();
-                if($val != 0) $cushiontArr[] = $val;
-            }
+
+            // 靠背信息
+            $backrestInfo = $this->getRowData($currentSheet, 113, 74, 1, 64);
+            // 靠背值
+            $backrestData = $this->getCellValue($currentSheet, 'B70', 'B69', 'B72');
         }
+
+        // 靠背信息
+        $backrestRowArr = $backrestInfo['rowArr']; // 行二维数组
+        $backrestPoints = $backrestInfo['points']; // 所有点坐标及压力值
+        $backrestNonZeroArr = $backrestInfo['nonZeroArr']; // 非零值
+        // 坐垫信息
+        $cushionRowArr = $cushiontInfo['rowArr']; // 行二维数组
+        $cushionPoints = $cushiontInfo['points']; // 所有点坐标及压力值
+        $cushionNonZeroArr = $cushiontInfo['nonZeroArr']; // 非零值
+
+        // 计算水平每行最大值
+        // $horizontalMaxValueArr
+
+        // 靠背加载力 加载力：非零值的总和*非零值个数*1.27*1.27
+        $backrest_jiazaili = round(array_sum($backrestNonZeroArr)*count($backrestNonZeroArr)*1.27*1.27, 2);
         // 坐垫加载力
-        $cushion_jiazaili = round(array_sum($cushiontArr)*count($cushiontArr)*1.27*1.27, 2);
+        $cushion_jiazaili = round(array_sum($cushionNonZeroArr)*count($cushionNonZeroArr)*1.27*1.27, 2);
 
         // 平均硬度， 该款座椅硬度方面XX（较软/偏硬，根据平均硬度评判）: 取坐垫硬度数值求平均数 与 4.1比较 
-        $average_hardness = $columns == 64 ? array_sum($cushiontArr)/count($cushiontArr) : array_sum($backrestArr)/count($backrestArr);
-        $average_hardness = $average_hardness > 4.1 ? '较硬' : '较软';
-        
+        $average_hardness = (array_sum($cushionNonZeroArr)/count($cushionNonZeroArr)) > 4.1 ? '较硬' : '较软';
+
 
         $result['formData'] = $formData;
         $result['result'] = array(
-            'backrestData' => $columns == 64 ? $backrestData : $cushionData,
-            'cushionData' => $columns == 64 ? $cushionData : $backrestData,
-            'backrest_jiazaili' => $columns == 64 ? $backrest_jiazaili : $cushion_jiazaili, // 靠背加载力
-            'cushion_jiazaili' => $columns == 64 ? $cushion_jiazaili : $backrest_jiazaili, // 坐垫加载力,
-            'average_hardness' => $average_hardness,
+            'backrestData' => $backrestData,
+            'cushionData' => $cushionData,
+            'backrest_jiazaili' => $backrest_jiazaili, // 靠背加载力
+            'cushion_jiazaili' => $cushion_jiazaili, // 坐垫加载力,
+            'average_hardness' => $average_hardness, // 平均硬度
+            'backrestPoints' => $backrestPoints, // 靠背所有坐标点及压力值
+            'cushionPoints' => $cushionPoints, // 坐垫所在有坐标点及压力值
+            'backrestRowArr' => $backrestRowArr, // 靠背行数组
+            'cushionRowArr' => $cushionRowArr, // 坐垫行数组
         );
+
+        cache(md5($filepath), serialize($result['result']));
         $this->success('', $result);
     }
 
@@ -210,5 +232,47 @@ class Form extends Api
             ->select();
 
         $this->success('请求成功', $list);
+    }
+
+    // 获取起始行之间的行，二维数组，并返回所有左边点
+    private function getRowData($currentSheet, $start_row, $end_row, $start_column, $end_column)
+    {
+        // y 坐标值
+        $y = 1;
+        for ($currentRow = $start_row; $currentRow >= $end_row; $currentRow--) {
+            $row = [];
+            $x = 1;
+            for ($currentColumn = $start_column; $currentColumn <= $end_column; $currentColumn++) {
+                // 单元格值
+                $val = $currentSheet->getCellByColumnAndRow($currentColumn, $currentRow)->getValue();
+                // 非零值
+                if($val != 0) $nonZeroArr[] = $val;
+
+                // 组合行数据
+                $row[] = $val;
+                // 单元格坐标点和值
+                $points[] = ['x' => $x, 'y' => $y, $val]; // 坐标点
+                // x坐标值
+                $x ++;
+            }
+            $rowArr[$y] = $row;
+            $y ++;
+        }
+
+        return compact('rowArr', 'points', 'nonZeroArr');
+    }
+
+    // 获取最大压力， 平均压力， 接触面积
+    private function getCellValue($currentSheet, $peak_pressure_cell, $average_pressure_cell, $contact_area_cell)
+    {
+        return array(
+            // 最大压力
+            'peak_pressure' => $currentSheet->getCell($peak_pressure_cell)->getValue(),
+            // 平均压力
+            'average_pressure' => $currentSheet->getCell($average_pressure_cell)->getValue(), 
+            // 接触面积
+            'contact_area' => $currentSheet->getCell($contact_area_cell)->getValue()
+        );
+        
     }
 }
