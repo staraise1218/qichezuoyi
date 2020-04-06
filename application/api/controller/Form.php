@@ -86,7 +86,7 @@ class Form extends Api
         $data['hardnessSize_backrest'] = $hardnessSize_backrest;
         $data['hardnessSize_cushion'] = $hardnessSize_cushion;
 
-        $dimension = count($backrestInfo) + count($cushionSize) + count($hardnessSize_backrest) + count($hardnessSize_cushion);
+        $dimension = count($backrestSize) + count($cushionSize) + count($hardnessSize_backrest) + count($hardnessSize_cushion);
         $data['dimension'] = $dimension;
 
         $this->success('请求成功', $data);
