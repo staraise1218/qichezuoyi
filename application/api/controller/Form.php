@@ -86,6 +86,8 @@ class Form extends Api
         $data['hardnessSize_backrest'] = $hardnessSize_backrest;
         $data['hardnessSize_cushion'] = $hardnessSize_cushion;
 
+        $dimension = count($backrestInfo) + count($cushionSize) + count($hardnessSize_backrest) + count($hardnessSize_cushion);
+        $data['dimension'] = $dimension;
 
         $this->success('请求成功', $data);
     }
@@ -123,17 +125,21 @@ class Form extends Api
         $formData['chairColor'] = db('chair_color')->where('id', $formData['chair_color_id'])->value('name'); // 座椅颜色
         $formData['chairMaterial'] = db('chair_material')->where('id', $formData['chair_material_id'])->value('name'); // 座椅材质
 
+        // 评分
+        $score = 100;
+        if ( $formData['sex'] == 0 && $form['height'] < 166 && $form['weigh'] > 65 ) $score -= 3;
+
         if($formData['file'] == '') $this->error('缺少文件');
 
 
         $filepath = '.'.$formData['file'];
-        if(cache(md5($filepath))) {
-            $result['formData'] = $formData;
+        // if(cache(md5($filepath))) {
+        //     $result['formData'] = $formData;
 
-            $cacheData = cache(md5($filepath));
-            $result['result'] = unserialize($cacheData);
-            $this->success('', $result);
-        }
+        //     $cacheData = cache(md5($filepath));
+        //     $result['result'] = unserialize($cacheData);
+        //     $this->success('', $result);
+        // }
 
         $ext = pathinfo($filepath, PATHINFO_EXTENSION);
         if (!in_array($ext, ['csv', 'xls', 'xlsx'])) {
@@ -170,7 +176,6 @@ class Form extends Api
             // 坐垫值
             $cushionData = $this->getCellValue($currentSheet, 'B70', 'B69', 'B72');
             
-           
         } else {
             // 坐垫信息
             $cushiontInfo = $this->getRowData($currentSheet, 60, 21, 1, 40);
@@ -193,8 +198,17 @@ class Form extends Api
         $cushionPoints = $cushiontInfo['points']; // 所有点坐标及压力值
         $cushionNonZeroArr = $cushiontInfo['nonZeroArr']; // 非零值
 
-        // 计算水平每行最大值
-        // $horizontalMaxValueArr
+        // 计算靠背水平每行最大值
+        $backrestHorizontalMaxValueArr = [];
+        foreach ($backrestRowArr as $backrestRow) {
+            $backrestHorizontalMaxValueArr[] = max($backrestRow);
+        }
+
+        // 计算靠背水平每行最大值
+        $cushionHorizontalMaxValueArr = [];
+        foreach ($cushionRowArr as $cushionRow) {
+            $cushionHorizontalMaxValueArr[] = max($cushionRow);
+        }
 
         // 靠背加载力 加载力：非零值的总和*非零值个数*1.27*1.27
         $backrest_jiazaili = round(array_sum($backrestNonZeroArr)*count($backrestNonZeroArr)*1.27*1.27, 2);
@@ -216,6 +230,8 @@ class Form extends Api
             'cushionPoints' => $cushionPoints, // 坐垫所在有坐标点及压力值
             'backrestRowArr' => $backrestRowArr, // 靠背行数组
             'cushionRowArr' => $cushionRowArr, // 坐垫行数组
+            'backrestHorizontalMaxValueArr' => $backrestHorizontalMaxValueArr, // 靠背水平每行最大值
+            'cushionHorizontalMaxValueArr' => $cushionHorizontalMaxValueArr, // 坐垫水平每行最大值
         );
 
         cache(md5($filepath), serialize($result['result']));
@@ -234,7 +250,7 @@ class Form extends Api
         $this->success('请求成功', $list);
     }
 
-    // 获取起始行之间的行，二维数组，并返回所有左边点
+    // 获取起始行之间的行，二维数组，并返回所有坐标点
     private function getRowData($currentSheet, $start_row, $end_row, $start_column, $end_column)
     {
         // y 坐标值
