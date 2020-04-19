@@ -113,7 +113,6 @@ class Form extends Api
         } else {
             $this->error('提交失败');
         }
-        
     }
 
     //  查看表单结果
@@ -127,10 +126,9 @@ class Form extends Api
 
         // 评分
         $score = 100;
-        if ( $formData['sex'] == 0 && $form['height'] < 166 && $form['weigh'] > 65 ) $score -= 3;
+        if ( $formData['sex'] == 0 && $formData['height'] < 166 && $formData['weight'] > 65 ) $score -= 3;
 
         if($formData['file'] == '') $this->error('缺少文件');
-
 
         $filepath = '.'.$formData['file'];
         // if(cache(md5($filepath))) {
@@ -140,7 +138,6 @@ class Form extends Api
         //     $result['result'] = unserialize($cacheData);
         //     $this->success('', $result);
         // }
-
         $ext = pathinfo($filepath, PATHINFO_EXTENSION);
         if (!in_array($ext, ['csv', 'xls', 'xlsx'])) {
             $this->error('不支持的格式');
@@ -198,13 +195,19 @@ class Form extends Api
         $cushionPoints = $cushiontInfo['points']; // 所有点坐标及压力值
         $cushionNonZeroArr = $cushiontInfo['nonZeroArr']; // 非零值
 
-        // 计算靠背水平每行最大值
-        $backrestHorizontalMaxValueArr = [];
+        // 计算靠背压力峰值点拟合图 （竖直每行最大值）
+        $backrestVerticalArr = []; // 先计算出竖直的数组
         foreach ($backrestRowArr as $backrestRow) {
-            $backrestHorizontalMaxValueArr[] = max($backrestRow);
+            foreach ($backrestRow as $k2 => $value) {
+                $backrestVerticalArr[$k2][] = $value;
+            }
+        }
+        $backrestVerticalMaxValueArr = [];
+        foreach ($backrestVerticalArr as $row) {
+            $backrestVerticalMaxValueArr[] = max($row);
         }
 
-        // 计算靠背水平每行最大值
+        // 计算坐垫压力峰值点拟合图 ：坐垫水平每行最大值
         $cushionHorizontalMaxValueArr = [];
         foreach ($cushionRowArr as $cushionRow) {
             $cushionHorizontalMaxValueArr[] = max($cushionRow);
@@ -218,6 +221,50 @@ class Form extends Api
         // 平均硬度， 该款座椅硬度方面XX（较软/偏硬，根据平均硬度评判）: 取坐垫硬度数值求平均数 与 4.1比较 
         $average_hardness = (array_sum($cushionNonZeroArr)/count($cushionNonZeroArr)) > 4.1 ? '较硬' : '较软';
 
+        // 靠背沿躯干线拟合图线
+        $chairHardnessBackrestArr = json_decode($formData['chair_hardness_backrest'], true);
+
+        $backrestHardnessNihe = [
+            ['x' => 1, 'y' => $chairHardnessBackrestArr['backrestHardness50']],
+            ['x' => 2, 'y' => $chairHardnessBackrestArr['backrestHardness100']],
+            ['x' => 3, 'y' => $chairHardnessBackrestArr['backrestHardness150']],
+            ['x' => 4, 'y' => $chairHardnessBackrestArr['backrestHardness200']],
+            ['x' => 5, 'y' => $chairHardnessBackrestArr['backrestHardness250']],
+            ['x' => 6, 'y' => $chairHardnessBackrestArr['backrestHardness300']],
+            ['x' => 7, 'y' => $chairHardnessBackrestArr['backrestHardness350']],
+            ['x' => 8, 'y' => $chairHardnessBackrestArr['backrestHardness400']],
+            ['x' => 9, 'y' => $chairHardnessBackrestArr['backrestHardness450']],
+            ['x' => 10, 'y' => $chairHardnessBackrestArr['backrestHardness500']],
+            ['x' => 11, 'y' => $chairHardnessBackrestArr['backrestHardness550']],
+        ];
+
+        // 沿坐垫面硬度拟合图线（两条）
+        $chairHardnessCushionArr = json_decode($formData['chair_hardness_cushion'], true);
+        // 左硬度
+        $cushionHardnessLeftNihe = [
+            ['x' => 1, 'y' => $chairHardnessCushionArr['cushionLeftHardness50']],
+            ['x' => 2, 'y' => $chairHardnessCushionArr['cushionLeftHardness100']],
+            ['x' => 3, 'y' => $chairHardnessCushionArr['cushionLeftHardness150']],
+            ['x' => 4, 'y' => $chairHardnessCushionArr['cushionLeftHardness200']],
+            ['x' => 5, 'y' => $chairHardnessCushionArr['cushionLeftHardness250']],
+            ['x' => 6, 'y' => $chairHardnessCushionArr['cushionLeftHardness300']],
+            ['x' => 7, 'y' => $chairHardnessCushionArr['cushionLeftHardness350']]
+        ];
+        // 右硬度
+        $cushionHardnessRighttNihe = [
+            ['x' => 1, 'y' => $chairHardnessCushionArr['cushionRightHardness50']],
+            ['x' => 2, 'y' => $chairHardnessCushionArr['cushionRightHardness100']],
+            ['x' => 3, 'y' => $chairHardnessCushionArr['cushionRightHardness150']],
+            ['x' => 4, 'y' => $chairHardnessCushionArr['cushionRightHardness200']],
+            ['x' => 5, 'y' => $chairHardnessCushionArr['cushionRightHardness250']],
+            ['x' => 6, 'y' => $chairHardnessCushionArr['cushionRightHardness300']],
+            ['x' => 7, 'y' => $chairHardnessCushionArr['cushionRightHardness350']]
+        ];
+        
+echo '<pre>';
+        print_r($chairHardnessCushionArr);
+        die();
+
 
         $result['formData'] = $formData;
         $result['result'] = array(
@@ -230,8 +277,15 @@ class Form extends Api
             'cushionPoints' => $cushionPoints, // 坐垫所在有坐标点及压力值
             'backrestRowArr' => $backrestRowArr, // 靠背行数组
             'cushionRowArr' => $cushionRowArr, // 坐垫行数组
-            'backrestHorizontalMaxValueArr' => $backrestHorizontalMaxValueArr, // 靠背水平每行最大值
+            'backrestVerticalMaxValueArr' => $backrestVerticalMaxValueArr, // 靠背竖着每行最大值
             'cushionHorizontalMaxValueArr' => $cushionHorizontalMaxValueArr, // 坐垫水平每行最大值
+            // 靠背硬度躯干线拟合图
+            'backrestHardnessNihe' => $backrestHardnessNihe,
+            // 坐垫左硬度拟合
+            'cushionHardnessLeftNihe' => $cushionHardnessLeftNihe,
+            // 坐垫右硬度拟合
+            'cushionHardnessRighttNihe' => $cushionHardnessRighttNihe,
+
         );
 
         cache(md5($filepath), serialize($result['result']));
@@ -267,7 +321,7 @@ class Form extends Api
                 // 组合行数据
                 $row[] = $val;
                 // 单元格坐标点和值
-                $points[] = ['x' => $x, 'y' => $y, $val]; // 坐标点
+                $points[] = ['x' => $x, 'y' => $y, 'value' => $val]; // 坐标点
                 // x坐标值
                 $x ++;
             }
