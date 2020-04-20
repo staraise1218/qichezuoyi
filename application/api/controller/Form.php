@@ -364,6 +364,8 @@ class Form extends Api
             $y ++;
         }
 
+        if($nonZeroArr = $nonZeroArr ?? []);
+
         return compact('rowArr', 'points', 'nonZeroArr');
     }
 
