@@ -288,14 +288,17 @@ class Form extends Api
             $chairHardnessCushionArr['cushionRightHardness300'],
             $chairHardnessCushionArr['cushionRightHardness350']
         ]);
-        $cushion_left_right = abs(array_sum($cushionLeftHardness_arr)/count($cushionLeftHardness_arr)
-        -
-        array_sum($cushionRightHardness_arr)/count($cushionRightHardness_arr));
         $junhengxing = '';
-        if($cushion_left_right > 0.1) {
-            $junhengxing = '一般';
-        } else {
-            $junhengxing = '较好';
+        if(count($cushionLeftHardness_arr)>0 && count($cushionRightHardness_arr)>0){
+            $cushion_left_right = abs(array_sum($cushionLeftHardness_arr)/count($cushionLeftHardness_arr)
+            -
+            array_sum($cushionRightHardness_arr)/count($cushionRightHardness_arr));
+            if($cushion_left_right > 0.1) {
+                $junhengxing = '一般';
+            } else {
+                $junhengxing = '较好';
+            }
+
         }
 
 
