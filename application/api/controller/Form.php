@@ -213,6 +213,13 @@ class Form extends Api
             $cushionHorizontalMaxValueArr[] = max($cushionRow);
         }
 
+        // 计算对称性：只计算坐垫
+        $cushionHorizontalMaxValueArr_max = max($cushionHorizontalMaxValueArr);
+        $cushionHorizontalMaxValueArr_temp = $cushionHorizontalMaxValueArr;
+
+
+
+
         // 靠背加载力 加载力：非零值的总和*非零值个数*1.27*1.27
         $backrest_jiazaili = round(array_sum($backrestNonZeroArr)*count($backrestNonZeroArr)*1.27*1.27, 2);
         // 坐垫加载力
@@ -260,7 +267,36 @@ class Form extends Api
             ['x' => 6, 'y' => $chairHardnessCushionArr['cushionRightHardness300']],
             ['x' => 7, 'y' => $chairHardnessCushionArr['cushionRightHardness350']]
         ];
-        
+        // 坐垫左硬度
+        $cushionLeftHardness_arr = array_filter([
+            $chairHardnessCushionArr['cushionLeftHardness50'],
+            $chairHardnessCushionArr['cushionLeftHardness100'],
+            $chairHardnessCushionArr['cushionLeftHardness150'],
+            $chairHardnessCushionArr['cushionLeftHardness200'],
+            $chairHardnessCushionArr['cushionLeftHardness250'],
+            $chairHardnessCushionArr['cushionLeftHardness300'],
+            $chairHardnessCushionArr['cushionLeftHardness350']
+        ]);
+
+        // 坐垫右硬度
+        $cushionRightHardness_arr = array_filter([
+            $chairHardnessCushionArr['cushionRightHardness50'],
+            $chairHardnessCushionArr['cushionRightHardness100'],
+            $chairHardnessCushionArr['cushionRightHardness150'],
+            $chairHardnessCushionArr['cushionRightHardness200'],
+            $chairHardnessCushionArr['cushionRightHardness250'],
+            $chairHardnessCushionArr['cushionRightHardness300'],
+            $chairHardnessCushionArr['cushionRightHardness350']
+        ]);
+        $cushion_left_right = abs(array_sum($cushionLeftHardness_arr)/count($cushionLeftHardness_arr)
+        -
+        array_sum($cushionRightHardness_arr)/count($cushionRightHardness_arr));
+        $junhengxing = '';
+        if($cushion_left_right > 0.1) {
+            $junhengxing = '一般';
+        } else {
+            $junhengxing = '较好';
+        }
 
 
 
@@ -283,6 +319,7 @@ class Form extends Api
             'cushionHardnessLeftNihe' => $cushionHardnessLeftNihe,
             // 坐垫右硬度拟合
             'cushionHardnessRighttNihe' => $cushionHardnessRighttNihe,
+            'junhengxing' => $junhengxing, // 均衡性
 
         );
 
