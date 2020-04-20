@@ -261,9 +261,7 @@ class Form extends Api
             ['x' => 7, 'y' => $chairHardnessCushionArr['cushionRightHardness350']]
         ];
         
-echo '<pre>';
-        print_r($chairHardnessCushionArr);
-        die();
+
 
 
         $result['formData'] = $formData;
