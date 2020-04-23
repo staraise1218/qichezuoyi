@@ -86,8 +86,8 @@ class Form extends Api
         $data['hardnessSize_backrest'] = $hardnessSize_backrest;
         $data['hardnessSize_cushion'] = $hardnessSize_cushion;
 
-        $dimension = count($backrestSize) + count($cushionSize) + count($hardnessSize_backrest) + count($hardnessSize_cushion);
-        $data['dimension'] = $dimension;
+        // $dimension = count($backrestSize) + count($cushionSize) + count($hardnessSize_backrest) + count($hardnessSize_cushion);
+        // $data['dimension'] = $dimension;
 
         $this->success('请求成功', $data);
     }
@@ -107,6 +107,13 @@ class Form extends Api
     // 提交表单
     public function FormSubmit(){
         $postData = input('post.');
+        // $chair_backrest_size = json_decode($postData['chair_backrest_size'], true);
+        // $chair_cushion_size = json_decode($postData['chair_cushion_size'], true);
+        // $chair_hardness_backrest = json_decode($postData['chair_hardness_backrest'], true);
+        // $chair_hardness_cushion = json_decode($postData['chair_hardness_cushion'], true);
+
+        // $postData['dimension'] = count($chair_backrest_size)+count($chair_cushion_size)+count($chair_hardness_backrest)+count($chair_hardness_cushion);
+
 
         if( db('form_data')->insert($postData)){
             $this->success('提交成功');
@@ -124,9 +131,6 @@ class Form extends Api
         $formData['chairColor'] = db('chair_color')->where('id', $formData['chair_color_id'])->value('name'); // 座椅颜色
         $formData['chairMaterial'] = db('chair_material')->where('id', $formData['chair_material_id'])->value('name'); // 座椅材质
 
-        // 评分
-        $score = 100;
-        if ( $formData['sex'] == 0 && $formData['height'] < 166 && $formData['weight'] > 65 ) $score -= 3;
 
         if($formData['file'] == '') $this->error('缺少文件');
 
@@ -219,7 +223,6 @@ class Form extends Api
 
 
 
-
         // 靠背加载力 加载力：非零值的总和*非零值个数*1.27*1.27
         $backrest_jiazaili = round(array_sum($backrestNonZeroArr)*count($backrestNonZeroArr)*1.27*1.27, 2);
         // 坐垫加载力
@@ -229,7 +232,7 @@ class Form extends Api
         $average_hardness = (array_sum($cushionNonZeroArr)/count($cushionNonZeroArr)) > 4.1 ? '较硬' : '较软';
 
         // 靠背沿躯干线拟合图线
-        $chairHardnessBackrestArr = json_decode($formData['chair_hardness_backrest'], true);
+        $chairHardnessBackrestArr = json_decode(htmlspecialchars_decode($formData['chair_hardness_backrest']), true);
 
         $backrestHardnessNihe = [
             ['x' => 1, 'y' => $chairHardnessBackrestArr['backrestHardness50']],
@@ -246,7 +249,8 @@ class Form extends Api
         ];
 
         // 沿坐垫面硬度拟合图线（两条）
-        $chairHardnessCushionArr = json_decode($formData['chair_hardness_cushion'], true);
+        $chairHardnessCushionArr = json_decode(htmlspecialchars_decode($formData['chair_hardness_cushion']), true);
+
         // 左硬度
         $cushionHardnessLeftNihe = [
             ['x' => 1, 'y' => $chairHardnessCushionArr['cushionLeftHardness50']],
@@ -301,7 +305,13 @@ class Form extends Api
 
         }
 
+        // 减分项
+        $score_arr = $this->_score($formData, $backrestData, $cushionData, $chairHardnessBackrestArr, $chairHardnessCushionArr);
+        
+        // echo '<pre>';
 
+        // print_r($score_arr);
+        // die();
 
         $result['formData'] = $formData;
         $result['result'] = array(
@@ -323,11 +333,135 @@ class Form extends Api
             // 坐垫右硬度拟合
             'cushionHardnessRighttNihe' => $cushionHardnessRighttNihe,
             'junhengxing' => $junhengxing, // 均衡性
-
+            'score_arr' => $score_arr,
         );
 
         cache(md5($filepath), serialize($result['result']));
         $this->success('', $result);
+    }
+
+    private function _score($formData, $backrestData, $cushionData, $chairHardnessBackrestArr, $chairHardnessCushionArr)
+    {
+        $score = 100;
+        $chair_backrest_size_arr = json_decode(htmlspecialchars_decode($formData['chair_backrest_size']), true);
+        $chair_cushion_size_arr = json_decode(htmlspecialchars_decode($formData['chair_cushion_size']), true);
+        // echo '<pre>';
+        // print_r($chair_cushion_size_arr);
+        // die();
+        $sex = $formData['sex'];
+        $height = (int) $formData['height'];
+        $weight = (int) $formData['weight'];
+        $shape = $formData['shape'];
+        // 1.女性&身高<166cm&体重>65kg&上半身胖&+200靠背景中宽度<250
+        if($sex == 0 && $height<166 && $weight>65 && $shape=='上身胖' && $chair_backrest_size_arr['back1'] < 250)
+        {
+            $score -= 3;
+            $sub_items['three'][] = '靠背尺寸';
+        }
+        // 2.女性&身高<166cm&体重>65kg&上半身胖&+400靠背景中宽度<250
+        if($sex == 0 && $height<166 && $weight>65 && $shape=='上身胖' && $chair_backrest_size_arr['back2'] < 250)
+        {
+            $score -= 3;
+            $sub_items['three'][] = '靠背尺寸';
+        }
+        // 3.男性&身高<175cm&体重>80kg&上半身胖&+200靠背景中宽度<270
+        if($sex == 1 && $height<175 && $weight>80 && $shape=='上身胖' && $chair_backrest_size_arr['back1'] < 270)
+        {
+            $score -= 3;
+            $sub_items['three'][] = '靠背尺寸';
+        }
+        // 4.男性&身高<175cm&体重>80kg&上半身胖&+400靠背景中宽度<270
+        if($sex == 1 && $height<166 && $weight>80 && $shape=='上身胖' && $chair_backrest_size_arr['back2'] < 270)
+        {
+            $score -= 3;
+            $sub_items['three'][] = '靠背尺寸';
+        }
+        // 5.女性&身高<166cm&体重>65kg&下半身胖&+200靠背景中宽度<250
+        if($sex == 0 && $height<166 && $weight>65 && $shape=='下身胖' && $chair_backrest_size_arr['back1'] < 280)
+        {
+            $score -= 3;
+            $sub_items['three'][] = '坐垫尺寸';
+        }
+        // 6.女性&身高<166cm&体重>65kg&下半身胖&+400靠背景中宽度<280
+        if($sex == 0 && $height<166 && $weight>65 && $shape=='下身胖' && $chair_backrest_size_arr['back2'] < 280)
+        {
+            $score -= 3;
+            $sub_items['three'][] = '坐垫尺寸';
+        }
+        // 7.男性&身高<175cm&体重>80kg&下半身胖&+200靠背景中宽度<300
+        if($sex == 1 && $height<175 && $weight>80 && $shape=='下身胖' && $chair_backrest_size_arr['back1'] < 300)
+        {
+            $score -= 3;
+            $sub_items['three'][] = '坐垫尺寸';
+        }
+        // 8.男性&身高<175cm&体重>80kg&下半身胖&+400靠背景中宽度<300
+        if($sex == 1 && $height<166 && $weight>80 && $shape=='下身胖' && $chair_backrest_size_arr['back2'] < 300)
+        {
+            $score -= 3;
+            $sub_items['three'][] = '坐垫尺寸';
+        }
+        // 9.+400靠背侧翼角度>45
+        if(atan(2*($chair_backrest_size_arr['back4']/($chair_backrest_size_arr['back3']-$chair_backrest_size_arr['back2']))) > 45) 
+        {
+            $score -= 3;
+            $sub_items['three'][] = '靠背侧翼';    
+        }
+        // 10.+200靠背侧翼角度>45
+        if(atan(2*($chair_cushion_size_arr['cushion3']/($chair_cushion_size_arr['cushion2']-$chair_cushion_size_arr['cushion1']))) > 45) 
+        {
+            $score -= 3;  
+            $sub_items['three'][] = '坐垫侧翼';   
+        }
+        // 11.女性&身高<166cm&体重>65kg&下半身胖&接触面积<800
+        if($sex == 0 && $height<166 && $weight>65 && $shape=='下身胖' && $cushionData['contact_area'] < 800)
+        {
+            $score -= 3;
+            $sub_items['three'][] = '接触面积'; 
+        }
+        // 12.男性&身高<175cm&体重>80kg&下半身胖&接触面积<900
+        if($sex == 0 && $height<175 && $weight>80 && $shape=='下身胖' && ($backrestData['contact_area']+$cushionData['contact_area'])/2 < 900)
+        {
+            $score -= 3;
+            $sub_items['three'][] = '接触面积'; 
+        }
+
+        // 1 平均圧力>0.5
+        if(($backrestData['average_pressure']+$backrestData['average_pressure'])/2 >0.5)
+        {
+            $score -= 4;
+            $sub_items['four'][] = '体压分布'; 
+        }
+
+        // 2 最大圧力>1.5
+        if(($backrestData['peak_pressure']+$backrestData['peak_pressure'])/2 >1.5)
+        {
+            $score -= 4;
+            $sub_items['four'][] = '体压分布'; 
+        }
+
+        // 1.靠背最大宽度<450
+        if($chair_backrest_size_arr['back6']<450)
+        {
+            $score -= 5;
+            $sub_items['five'][] = '靠背尺寸'; 
+        }
+
+        // 2.坐垫最大宽度<450
+        if($chair_cushion_size_arr['cushion6']<450)
+        {
+            $score -= 5;
+            $sub_items['five'][] = '坐垫尺寸'; 
+        }
+
+        // 3.硬度最小值<3.0
+        if( min( array_merge($chairHardnessBackrestArr, $chairHardnessCushionArr)
+        ) < 3)
+        {
+            $score -= 5;
+            $sub_items['five'][] = '硬度'; 
+        }
+
+        return compact('score', 'sub_items');
     }
 
     // 获得车型
