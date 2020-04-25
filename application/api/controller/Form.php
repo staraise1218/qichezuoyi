@@ -419,21 +419,21 @@ class Form extends Api
             $sub_items['three'][] = '接触面积'; 
         }
         // 12.男性&身高<175cm&体重>80kg&下半身胖&接触面积<900
-        if($sex == 0 && $height<175 && $weight>80 && $shape=='下身胖' && ($backrestData['contact_area']+$cushionData['contact_area'])/2 < 900)
+        if($sex == 0 && $height<175 && $weight>80 && $shape=='下身胖' && $cushionData['contact_area'] < 900)
         {
             $score -= 3;
             $sub_items['three'][] = '接触面积'; 
         }
 
         // 1 平均圧力>0.5
-        if(($backrestData['average_pressure']+$backrestData['average_pressure'])/2 >0.5)
+        if($cushionData['average_pressure'] >0.5)
         {
             $score -= 4;
             $sub_items['four'][] = '体压分布'; 
         }
 
         // 2 最大圧力>1.5
-        if(($backrestData['peak_pressure']+$backrestData['peak_pressure'])/2 >1.5)
+        if($cushionData['peak_pressure'] >1.5)
         {
             $score -= 4;
             $sub_items['four'][] = '体压分布'; 
@@ -460,6 +460,14 @@ class Form extends Api
             $score -= 5;
             $sub_items['five'][] = '硬度'; 
         }
+
+        // 5.左右压力和差值>20 左压力-右压力 绝对值大于20
+        if(abs(array_sum($cushionLeftHardness_arr)-array_sum($cushionRightHardness_arr)) > 20)
+        {
+            $score -= 5;
+            $sub_items['five'][] = '体压分布'; 
+        }
+
 
         return compact('score', 'sub_items');
     }
