@@ -49,10 +49,11 @@ class Character {
         if ($fchar >= ord('A') && $fchar <= ord('z')) {
             return strtoupper($str{0});
         }
-        // $s1  = iconv('UTF-8', 'gb2312', $str);
-        $s1 = mb_convert_encoding($str,"UTF-8","GBK");
-        // $s2  = iconv('gb2312', 'UTF-8', $s1);
-        $s2 = mb_convert_encoding($s1,"GBK","UTF-8");
+
+        $s1  = iconv('UTF-8', 'GBK', $str);
+        // $s1 = mb_convert_encoding($str,"UTF-8","GBK");
+        $s2  = iconv('GBK', 'UTF-8', $s1);
+        // $s2 = mb_convert_encoding($s1,"GBK","UTF-8");
         $s   = $s2 == $str ? $s1 : $str;
         $asc = ord($s{0}) * 256 + ord($s{1}) - 65536;
         if ($asc >= -20319 && $asc <= -20284) {
