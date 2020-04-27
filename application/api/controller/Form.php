@@ -474,7 +474,7 @@ class Form extends Api
 
     // 获得车型
     public function getCarType(){
-        $car_system_id = input('get.car_system_id/d');
+        $car_system_id = input('car_system_id/d');
 
         $list = db('car_type')
             ->where('car_system_id', $car_system_id)
