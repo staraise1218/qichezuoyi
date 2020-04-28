@@ -53,9 +53,118 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.bindevent(table);
         },
         add: function () {
+            function getHeightSelectOption(sex){
+                Fast.api.ajax({
+                    url: 'people/getHeightSelectOption',
+                    dataType: 'html',
+                    data: {sex: sex},
+                }, function (data, ret) {
+                    $('#c-height').html(data);
+                    $('#c-height').selectpicker("refresh");
+                     return false;
+                });
+            }
+
+            function getWeightSelectOption(sex){
+
+                Fast.api.ajax({
+                    url: 'people/getWeightSelectOption',
+                    dataType: 'html',
+                    data: {sex: sex},
+                }, function (data, ret) {
+                    $('#c-weight').html(data);
+                    $('#c-weight').selectpicker("refresh");
+                    return false;
+                });
+            }
+
+            function getShapeSelectOption(sex){
+
+                Fast.api.ajax({
+                    url: 'people/getShapeSelectOption',
+                    dataType: 'html',
+                    data: {sex: sex},
+                }, function (data, ret) {
+                    $('#c-shape').html(data);
+                    $('#c-shape').selectpicker("refresh");
+                     return false;
+                });
+            }
+            
+            // 选择男女切换身高、体重、体型
+            $('#c-sex').change(function(){
+                var sexVal = $(this).val();
+                if(sexVal == '') return false;
+
+                // 切换身高
+                getHeightSelectOption(sexVal);
+                // 切换体重
+                getWeightSelectOption(sexVal);
+                // 切换体型
+                getShapeSelectOption(sexVal);
+            })
+
             Controller.api.bindevent();
         },
         edit: function () {
+            function getHeightSelectOption(sex, selectValue=null){
+
+                Fast.api.ajax({
+                    url: 'people/getHeightSelectOption',
+                    dataType: 'html',
+                    data: {sex: sex, selectValue: selectValue},
+                }, function (data, ret) {
+                    $('#c-height').html(data);
+                    $('#c-height').selectpicker("refresh");
+                     return false;
+                });
+
+            }
+
+            function getWeightSelectOption(sex, selectValue=null){
+
+                Fast.api.ajax({
+                    url: 'people/getWeightSelectOption',
+                    dataType: 'html',
+                    data: {sex: sex, selectValue: selectValue},
+                }, function (data, ret) {
+                    $('#c-weight').html(data);
+                    $('#c-weight').selectpicker("refresh");
+                    return false;
+                });
+            }
+
+            function getShapeSelectOption(sex, selectValue=null){
+                Fast.api.ajax({
+                    url: 'people/getShapeSelectOption',
+                    dataType: 'html',
+                    data: {sex: sex, selectValue: selectValue},
+                }, function (data, ret) {
+                    $('#c-shape').html(data);
+                    $('#c-shape').selectpicker("refresh");
+                     return false;
+                });
+            }
+            
+            // 选择男女切换身高、体重、体型
+            $('#c-sex').change(function(){
+                var sexVal = $(this).val();
+                if(sexVal == '') return false;
+
+                // 切换身高
+                getHeightSelectOption(sexVal);
+                // 切换体重
+                getWeightSelectOption(sexVal);
+                // 切换体型
+                getShapeSelectOption(sexVal);
+            })
+
+            // 身高、体重、体型 select 初始化
+            var sexDefalt = $('#c-sex').val();
+            getHeightSelectOption(sexDefalt, $('input[name=defaultHeight]').val());
+            getWeightSelectOption(sexDefalt, $('input[name=defaultWeight]').val());
+            getShapeSelectOption(sexDefalt, $('input[name=defaultShape]').val());
+
             Controller.api.bindevent();
         },
         api: {
