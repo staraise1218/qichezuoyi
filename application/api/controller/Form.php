@@ -107,13 +107,12 @@ class Form extends Api
     // 提交表单
     public function FormSubmit(){
         $postData = input('post.');
-        // $chair_backrest_size = json_decode($postData['chair_backrest_size'], true);
-        // $chair_cushion_size = json_decode($postData['chair_cushion_size'], true);
-        // $chair_hardness_backrest = json_decode($postData['chair_hardness_backrest'], true);
-        // $chair_hardness_cushion = json_decode($postData['chair_hardness_cushion'], true);
+        $chair_backrest_size = json_decode(html_entity_decode($postData['chair_backrest_size']), true);
+        $chair_cushion_size = json_decode(html_entity_decode($postData['chair_cushion_size']), true);
+        $chair_hardness_backrest = json_decode(html_entity_decode($postData['chair_hardness_backrest']), true);
+        $chair_hardness_cushion = json_decode(html_entity_decode($postData['chair_hardness_cushion']), true);
 
-        // $postData['dimension'] = count($chair_backrest_size)+count($chair_cushion_size)+count($chair_hardness_backrest)+count($chair_hardness_cushion);
-
+        $postData['dimension'] = count($chair_backrest_size)+count($chair_cushion_size)+count($chair_hardness_backrest)+count($chair_hardness_cushion);
 
         if( db('form_data')->insert($postData)){
             $this->success('提交成功');
@@ -306,7 +305,7 @@ class Form extends Api
         }
 
         // 减分项
-        $score_arr = $this->_score($formData, $backrestData, $cushionData, $chairHardnessBackrestArr, $chairHardnessCushionArr);
+        $score_arr = $this->_score($formData, $backrestData, $cushionData, $chairHardnessBackrestArr, $chairHardnessCushionArr, $cushionLeftHardness_arr, $cushionRightHardness_arr);
         
         // echo '<pre>';
 
@@ -340,7 +339,7 @@ class Form extends Api
         $this->success('', $result);
     }
 
-    private function _score($formData, $backrestData, $cushionData, $chairHardnessBackrestArr, $chairHardnessCushionArr)
+    private function _score($formData, $backrestData, $cushionData, $chairHardnessBackrestArr, $chairHardnessCushionArr, $cushionLeftHardness_arr, $cushionRightHardness_arr)
     {
         $score = 100;
         $chair_backrest_size_arr = json_decode(htmlspecialchars_decode($formData['chair_backrest_size']), true);
@@ -400,6 +399,7 @@ class Form extends Api
             $score -= 3;
             $sub_items['three'][] = '坐垫尺寸';
         }
+
         // 9.+400靠背侧翼角度>45
         if(atan(2*($chair_backrest_size_arr['back4']/($chair_backrest_size_arr['back3']-$chair_backrest_size_arr['back2']))) > 45) 
         {
