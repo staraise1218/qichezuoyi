@@ -1,0 +1,93 @@
+
+<div class="panel panel-default">
+    <div class="panel-heading">人员基本信息</div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-2 text-right">姓名：</div>
+            <div class="col-sm-2">{$row.name}</div>
+            <div class="col-sm-2 text-right">年龄：</div>
+            <div class="col-sm-2">{$row.age}</div>
+            <div class="col-sm-2 text-right">性别：</div>
+            <div class="col-sm-2">{$row.sex == '1' ? '男' : '女'}</div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-sm-2 text-right">身高：</div>
+            <div class="col-sm-2">{$row.height}</div>
+            <div class="col-sm-2 text-right">体重：</div>
+            <div class="col-sm-2">{$row.weight}</div>
+            <div class="col-sm-2 text-right">体型：</div>
+            <div class="col-sm-2">{$row.shape}</div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">座椅基本信息</div>
+    <div class="panel-body">
+
+        <div class="row">
+            <div class="col-sm-2 text-right">车型：</div>
+            <div class="col-sm-2">{$formData['carType']}</div>
+            <div class="col-sm-2 text-right">级别：</div>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-2 text-right">价格：</div>
+            <div class="col-sm-2">{$row.chair_price}</div>
+        </div>
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-sm-2 text-right">颜色：</div>
+            <div class="col-sm-2">{$formData['chairColor']}</div>
+            <div class="col-sm-2 text-right">材质：</div>
+            <div class="col-sm-2">{$formData['chairMaterial']}</div>
+            
+        </div>
+    </div>
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">靠背尺寸</div>
+    <div class="panel-body">
+        {foreach name="chair_backrest_size_arr" id="item"}
+        <div class="col-sm-3 text-right">{$chair_backrest_enums[$key]}：</div>
+        <div class="col-sm-3">{$item}</div>
+        {/foreach}
+    </div>
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">坐垫尺寸</div>
+    <div class="panel-body">
+        {foreach name="chair_cushion_size_arr" id="item"}
+        <div class="col-sm-3 text-right">{$chair_cushion_enums[$key]}：</div>
+        <div class="col-sm-3">{$item}</div>
+        {/foreach}
+    </div>
+
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">靠背硬度</div>
+    <div class="panel-body">
+        {foreach name="chair_hardness_backrest_arr" id="item"}
+        <div class="col-sm-3 text-right">{$chair_hardness_backrest_enums[$key]}：</div>
+        <div class="col-sm-3">{$item}</div>
+        {/foreach}
+    </div>
+
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">坐垫硬度</div>
+    <div class="panel-body">
+        {foreach name="chair_hardness_cushion_arr" id="item"}
+        <div class="col-sm-3 text-right">{$chair_hardness_cushion_enums[$key]}：</div>
+        <div class="col-sm-3">{$item}</div>
+        {/foreach}
+    </div>
+
+</div>
