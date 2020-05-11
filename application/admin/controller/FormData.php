@@ -44,7 +44,6 @@ class FormData extends Backend
         $chair_backrest_size_arr = json_decode(htmlspecialchars_decode($row->chair_backrest_size), true);
         $chair_backrest_enums = db('chair_backrest')->select();
         $chair_backrest_enums = array_column($chair_backrest_enums, 'title', 'field');
-        dump($row);
 
         $chair_cushion_size_arr = json_decode(htmlspecialchars_decode($row->chair_cushion_size), true);
         $chair_cushion_enums = db('chair_cushion')->select();
