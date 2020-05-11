@@ -44,7 +44,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'chair_hardness_cushion', visible: false, title: __('Chair_hardness_cushion')},
                         {field: 'user_id', visible: false, title: __('User_id')},
                         {field: 'file', visible: false, title: __('File')},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate, 
+                            buttons: [{
+                                name: 'detail',
+                                text: '详情',
+                                title: '查看详情',
+                                classname: 'btn btn-xs btn-primary btn-dialog',
+                                icon: '',
+                                url: 'form_data/detail',
+                                callback: function (data) {
+                                    Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
+                                },
+                                visible: function (row) {
+                                    //返回true时按钮显示,返回false隐藏
+                                    return true;
+                                }
+                            }]
+                        }
                     ]
                 ]
             });
