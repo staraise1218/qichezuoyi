@@ -23,6 +23,7 @@ class FormData extends Backend
         parent::_initialize();
         $this->model = new \app\admin\model\FormData;
         $this->view->assign("sexList", $this->model->getSexList());
+        $this->view->assign("ageList", $this->model->getAgeList());
     }
     
     /**

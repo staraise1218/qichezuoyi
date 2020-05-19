@@ -9,7 +9,13 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Age')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-age" class="form-control" name="row[age]" type="number" value="{$row.age|htmlentities}">
+                        
+            <select  id="c-age" class="form-control selectpicker" name="row[age]">
+                {foreach name="ageList" item="vo"}
+                    <option value="{$vo}" {in name="key" value="$row.age"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
         </div>
     </div>
     <div class="form-group">

@@ -35,6 +35,11 @@ class FormData extends Model
         return ['1' => __('Sex 1'), '0' => __('Sex 0')];
     }
 
+    public function getAgeList()
+    {
+        return ['18~22', '23~27', '28~32', '33~37', '38~42', '43~47', '48~52', '53~57', '58~62', '63+'];
+    }   
+
 
     public function getSexTextAttr($value, $data)
     {
