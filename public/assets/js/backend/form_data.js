@@ -63,7 +63,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             {
                                 name: 'result',
                                 text: '报告',
-                                classname: 'btn btn-xs btn-primary btn-addtabs',
+                                classname: 'btn btn-xs btn-primary',
                                 icon: '',
                                 url: '/pc/index.html#/result?id={id}&testid=123456',
                                 extend:' target="_blank"',
