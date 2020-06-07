@@ -59,6 +59,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     //返回true时按钮显示,返回false隐藏
                                     return true;
                                 }
+                            },
+                            {
+                                name: 'result',
+                                text: '报告',
+                                classname: 'btn btn-xs btn-primary btn-addtabs',
+                                icon: '',
+                                url: '/pc/index.html#/result?id={id}&testid=123456',
+                                extend:' target="_blank"',
+                                callback: function (data) {
+                                    Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
+                                },
+                                visible: function (row) {
+                                    //返回true时按钮显示,返回false隐藏
+                                    return true;
+                                }
                             }]
                         }
                     ]
