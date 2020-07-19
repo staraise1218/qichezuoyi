@@ -39,6 +39,7 @@ class FormData extends Backend
 
         $formData['carType'] = db('car_type')->where('id', $row->car_type_id)->value('name'); // 车型
         $formData['level'] = db('car_level')->where('id', $row->car_level_id)->value('name'); 
+        $formData['car_price'] = db('car_price')->where('id', $row->car_price_id)->value('name'); 
         $formData['chairColor'] = db('chair_color')->where('id', $row->chair_color_id)->value('name'); // 座椅颜色
         $formData['chairMaterial'] = db('chair_material')->where('id', $row->chair_material_id)->value('name'); // 座椅材质
 
