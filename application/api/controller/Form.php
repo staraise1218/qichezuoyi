@@ -114,6 +114,7 @@ class Form extends Api
 
         $postData['dimension'] = count($chair_backrest_size)+count($chair_cushion_size)+count($chair_hardness_backrest)+count($chair_hardness_cushion);
 
+        $postData['car_price_id'] = $postData['chair_price'];
         if( db('form_data')->insert($postData)){
             $this->success('提交成功');
         } else {
